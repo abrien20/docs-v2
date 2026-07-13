@@ -1,6 +1,7 @@
 ---
 name: go-jwt-middleware
-description: Use when securing Go HTTP API endpoints with JWT Bearer token validation, scope/permission checks, or stateless auth. Integrates github.com/auth0/go-jwt-middleware/v3 for REST APIs receiving access tokens from frontends or mobile apps. Also handles DPoP proof-of-possession token binding. Triggers on jwtmiddleware, go-jwt-middleware, Go API auth, JWT validation, CheckJWT.
+description: >
+  Use when protecting Go HTTP API endpoints with JWT Bearer token validation or scope checks. Integrates go-jwt-middleware/v3 — use even if the user says "validate tokens in my Go API" or "secure my Go HTTP endpoints".
 license: Apache-2.0
 metadata:
   author: Auth0 <support@auth0.com>
@@ -19,12 +20,12 @@ metadata:
     install:
       - id: brew
         kind: brew
-        package: auth0/auth0-cli/auth0
+        formula: auth0/auth0-cli/auth0
         bins: [auth0]
         label: 'Install Auth0 CLI (brew)'
       - id: brew
         kind: brew
-        package: gh
+        formula: gh
         bins: [gh]
         label: 'Install GitHub CLI (brew)'
 ---
