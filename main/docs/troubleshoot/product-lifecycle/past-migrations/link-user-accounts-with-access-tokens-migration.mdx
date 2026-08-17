@@ -202,7 +202,7 @@ Now you must get an access token (containing the `update:current_user_identities
 
 #### Link current user accounts with auth0.js
 
-If you use [auth0.js library](/docs/libraries/auth0js) to access the Management API and link accounts, then you probably use the ID token of the user's primary identity to instantiate `auth0.Management` and use it to link accounts.
+If you use the [auth0.js library](/docs/libraries/auth0js) to access the Management API and link accounts, then you probably use the ID token of the user's primary identity to instantiate `auth0.Management` and use it to link accounts.
 
 1. Get an access token with the `update:current_user_identities` scope, then use this token to instantiate `auth0.Management`. The final call to `linkUser` remains the same.
 2. Using the previous method using an ID token, your code would look similar to this:
@@ -224,7 +224,13 @@ If you get an access token for account linking that contains the `update:users` 
 
 However, this new method introduces an alternative to this. You still use an access token that contains the `update:users` scope to authenticate with the API, but in the request's payload you can send the secondary's account ID token (instead of `user_id` and `provider`).
 
+<Callout icon="file-lines" color="#0EA5E9" iconType="regular">Using the Auth0 CLI? If you haven't already, [set up and authenticate your CLI session](/docs/deploy-monitor/auth0-cli) before running this command.</Callout>
+
 <AuthCodeGroup>
+```bash Auth0 CLI lines
+auth0 api post "users/PRIMARY_ACCOUNT_USER_ID/identities" \
+  --data '{"link_with":"SECONDARY_ACCOUNT_ID_TOKEN"}'
+```
 ```bash cURL lines
 curl --request POST \
   --url 'https://{yourDomain}/api/v2/users/PRIMARY_ACCOUNT_USER_ID/identities' \
@@ -351,7 +357,7 @@ url = URI("https://{yourDomain}/api/v2/users/PRIMARY_ACCOUNT_USER_ID/identities"
 
 http = Net::HTTP.new(url.host, url.port)
 http.use_ssl = true
-http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+http.verify_mode = OpenSSL::SSL::VERIFY_PEER
 
 request = Net::HTTP::Post.new(url)
 request["authorization"] = 'Bearer ACCESS_TOKEN'

@@ -30,6 +30,16 @@
       ]
     },
     {
+      "group": "Agents",
+      "pages": [
+        "docs/ja-jp/api/management/v2/agents/get-agents",
+        "docs/ja-jp/api/management/v2/agents/post-agent",
+        "docs/ja-jp/api/management/v2/agents/get-agent",
+        "docs/ja-jp/api/management/v2/agents/delete-agent",
+        "docs/ja-jp/api/management/v2/agents/patch-agent"
+      ]
+    },
+    {
       "group": "Anomaly",
       "pages": [
         "docs/ja-jp/api/management/v2/anomaly/get-ips-by-id",
@@ -47,6 +57,8 @@
         "docs/ja-jp/api/management/v2/attack-protection/patch-brute-force-protection",
         "docs/ja-jp/api/management/v2/attack-protection/get-captcha",
         "docs/ja-jp/api/management/v2/attack-protection/patch-captcha",
+        "docs/ja-jp/api/management/v2/attack-protection/get-phone-provider-protection",
+        "docs/ja-jp/api/management/v2/attack-protection/patch-phone-provider-protection",
         "docs/ja-jp/api/management/v2/attack-protection/get-suspicious-ip-throttling",
         "docs/ja-jp/api/management/v2/attack-protection/patch-suspicious-ip-throttling"
       ]
@@ -97,6 +109,7 @@
         "docs/ja-jp/api/management/v2/clients/post-clients",
         "docs/ja-jp/api/management/v2/clients/post-clients-cimd-preview",
         "docs/ja-jp/api/management/v2/clients/post-clients-cimd-register",
+        "docs/ja-jp/api/management/v2/clients/get-clients-search",
         "docs/ja-jp/api/management/v2/clients/get-credentials",
         "docs/ja-jp/api/management/v2/clients/post-credentials",
         "docs/ja-jp/api/management/v2/clients/get-credentials-by-credential-id",
@@ -138,6 +151,8 @@
         "docs/ja-jp/api/management/v2/connections/get-directory-provisioning-default-mapping",
         "docs/ja-jp/api/management/v2/connections/post-synchronizations",
         "docs/ja-jp/api/management/v2/connections/get-synchronized-groups",
+        "docs/ja-jp/api/management/v2/connections/delete-synchronized-groups",
+        "docs/ja-jp/api/management/v2/connections/post-synchronized-groups",
         "docs/ja-jp/api/management/v2/connections/put-synchronized-groups",
         "docs/ja-jp/api/management/v2/connections/get-keys",
         "docs/ja-jp/api/management/v2/connections/post-keys",
@@ -225,6 +240,34 @@
       "group": "Events",
       "pages": [
         "docs/ja-jp/api/management/v2/events/subscribe-events"
+      ]
+    },
+    {
+      "group": "Experimentation",
+      "pages": [
+        "docs/ja-jp/api/management/v2/experimentation/get-experiments",
+        "docs/ja-jp/api/management/v2/experimentation/create-experiment",
+        "docs/ja-jp/api/management/v2/experimentation/get-experiment",
+        "docs/ja-jp/api/management/v2/experimentation/delete-experiment",
+        "docs/ja-jp/api/management/v2/experimentation/update-experiment",
+        "docs/ja-jp/api/management/v2/experimentation/update-experiment-status",
+        "docs/ja-jp/api/management/v2/experimentation/validate-experiment",
+        "docs/ja-jp/api/management/v2/experimentation/get-feature-flags",
+        "docs/ja-jp/api/management/v2/experimentation/create-feature-flag",
+        "docs/ja-jp/api/management/v2/experimentation/get-feature-flag",
+        "docs/ja-jp/api/management/v2/experimentation/delete-feature-flag",
+        "docs/ja-jp/api/management/v2/experimentation/update-feature-flag",
+        "docs/ja-jp/api/management/v2/experimentation/update-feature-flag-status",
+        "docs/ja-jp/api/management/v2/experimentation/get-variations",
+        "docs/ja-jp/api/management/v2/experimentation/create-variation",
+        "docs/ja-jp/api/management/v2/experimentation/get-variation",
+        "docs/ja-jp/api/management/v2/experimentation/delete-variation",
+        "docs/ja-jp/api/management/v2/experimentation/update-variation",
+        "docs/ja-jp/api/management/v2/experimentation/get-segments",
+        "docs/ja-jp/api/management/v2/experimentation/create-segment",
+        "docs/ja-jp/api/management/v2/experimentation/get-segment",
+        "docs/ja-jp/api/management/v2/experimentation/delete-segment",
+        "docs/ja-jp/api/management/v2/experimentation/update-segment"
       ]
     },
     {
@@ -353,6 +396,9 @@
         "docs/ja-jp/api/management/v2/keys/delete-encryption-key",
         "docs/ja-jp/api/management/v2/keys/post-encryption-key",
         "docs/ja-jp/api/management/v2/keys/post-encryption-wrapping-key",
+        "docs/ja-jp/api/management/v2/keys/get-all-keys-network-acls",
+        "docs/ja-jp/api/management/v2/keys/create-keys-network-acls",
+        "docs/ja-jp/api/management/v2/keys/get-keys-network-acls",
         "docs/ja-jp/api/management/v2/keys/get-signing-keys",
         "docs/ja-jp/api/management/v2/keys/post-signing-keys",
         "docs/ja-jp/api/management/v2/keys/get-signing-key",
@@ -399,6 +445,11 @@
         "docs/ja-jp/api/management/v2/organizations/get-organization-client-grants",
         "docs/ja-jp/api/management/v2/organizations/create-organization-client-grants",
         "docs/ja-jp/api/management/v2/organizations/delete-client-grants-by-grant-id",
+        "docs/ja-jp/api/management/v2/organizations/get-organization-clients",
+        "docs/ja-jp/api/management/v2/organizations/delete-organization-clients",
+        "docs/ja-jp/api/management/v2/organizations/post-organization-clients",
+        "docs/ja-jp/api/management/v2/organizations/get-organization-client",
+        "docs/ja-jp/api/management/v2/organizations/patch-organization-client",
         "docs/ja-jp/api/management/v2/organizations/get-organization-connections",
         "docs/ja-jp/api/management/v2/organizations/post-organization-connection",
         "docs/ja-jp/api/management/v2/organizations/get-organization-connection",
@@ -427,10 +478,12 @@
         "docs/ja-jp/api/management/v2/organizations/get-organization-member-roles",
         "docs/ja-jp/api/management/v2/organizations/delete-organization-member-roles",
         "docs/ja-jp/api/management/v2/organizations/post-organization-member-roles",
+        "docs/ja-jp/api/management/v2/organizations/get-organization-role-members",
         "docs/ja-jp/api/management/v2/organizations/get-organization-groups",
         "docs/ja-jp/api/management/v2/organizations/get-organization-group-roles",
         "docs/ja-jp/api/management/v2/organizations/delete-organization-group-roles",
-        "docs/ja-jp/api/management/v2/organizations/post-organization-group-roles"
+        "docs/ja-jp/api/management/v2/organizations/post-organization-group-roles",
+        "docs/ja-jp/api/management/v2/organizations/get-organization-role-groups"
       ]
     },
     {
@@ -627,8 +680,6 @@
         "docs/ja-jp/api/management/v2/users/get-user-effective-roles",
         "docs/ja-jp/api/management/v2/users/get-user-role-source-groups",
         "docs/ja-jp/api/management/v2/users/get-enrollments",
-        "docs/ja-jp/api/management/v2/users/get-federated-connections-tokensets",
-        "docs/ja-jp/api/management/v2/users/delete-federated-connections-tokensets-by-tokenset-id",
         "docs/ja-jp/api/management/v2/users/get-user-groups",
         "docs/ja-jp/api/management/v2/users/post-identities",
         "docs/ja-jp/api/management/v2/users/delete-user-identity-by-user-id",

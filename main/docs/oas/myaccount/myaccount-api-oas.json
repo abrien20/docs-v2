@@ -3,7 +3,7 @@
   "info": {
     "title": "My Account",
     "version": "1.0",
-    "description": ":::info Limited Early Access\n\nThe My Account API is available in Limited Early Access. To request access, contact your Auth0 account manager. To learn more about Auth0's product release cycle, read [Product Release Stages](https://auth0.com/docs/troubleshoot/product-lifecycle/product-release-stages).\n\n:::\n\nThe Auth0 My Account API provides a dedicated set of endpoints for users to manage their own account information. Customers can use these APIs to build self-service experiences in their applications or progressively add details to a user account.\n\nThe My Account API operates within the context of the currently logged-in user and can be used directly within user-facing applications.\n\n:::tip Using Auth0 domain vs. custom domain\n\nThe My Account API supports using your canonical Auth0 domain or your custom domain, but you must use the same one throughout the entire process, including:\n\n- Getting an access token\n- Setting the audience value\n- Calling the My Account API endpoint\n\nFor more information, read [Custom Domains](https://auth0.com/docs/customize/custom-domains).\n\n:::\n\n## Activate the My Account API\n\nYou can activate the My Account API for your tenant in the Auth0 Dashboard:\n\n1. Navigate to Authentication > APIs.\n2. Locate the MyAccount API banner.\n3. Select Activate.\n\n![](https://images.ctfassets.net/cdy7uua7fh8z/DGkDQNIHcegN8vtQyEvF3/a2e98b06867701a66fa1f1b3df1c996b/My_Account_API_-_Activate.png)\n\nBy default, the My Account API is created with the following application API access policies:\n\n`require_client_grant` for user flows\n\n`deny_all` for client (machine-to-machine) flows\n\nFor an application to access the My Account API on the user's behalf, you must explicitly create a client grant for that application, which allows you to define the maximum scopes the application can request. Alternatively, you can change the policy for user access flows to allow_all, which allows any application in your tenant to request any scope from the My Account API.\n\nBecause the My Account API exposes sensitive information and operations, Auth0 does not recommend using allow_all for user access flows. You should follow a least privilege principle with the My Account API to ensure applications only get access to what they truly need, minimizing potential security risks.\n\nThe final permissions granted to the application will be determined by the intersection of the scopes allowed by the application API access policy, the Role-Based Access Control (RBAC) permissions assigned to the end user, and any user consent given (if applicable).\n\n:::info Supported flows\n\nYou cannot update the application API policy for client access to the My Account API, which means you cannot access the My Account API using the Client Credentials Flow.\n\n:::\n\nTo learn more about how to manage application API access policies and their associated client grants, read [Application Access to APIs: Client Grants](https://auth0.com/docs/get-started/applications/application-access-to-apis-client-grants).\n\n## Get an access token\n\nYou can get an access token for the My Account API in the same way you'd get an access token for one of your own APIs.\n\n:::info &nbsp\nIf you're going to allow the My Account API to perform sensitive operations (such as enrolling an authentication method), we strongly recommend that you use [step-up authentication](https://auth0.com/docs/secure/multi-factor-authentication/step-up-authentication) to enforce additional security policies through [multi-factor authentication (MFA)](https://auth0.com/docs/secure/multi-factor-authentication).\n:::\n\nIf you're using Universal Login, read the following articles:\n\n- [Call Your API Using the Authorization Code Flow](https://auth0.com/docs/get-started/authentication-and-authorization-flow/authorization-code-flow/call-your-api-using-the-authorization-code-flow)\n- [Call Your API Using the Authorization Code Flow with PKCE](https://auth0.com/docs/get-started/authentication-and-authorization-flow/authorization-code-flow-with-pkce/call-your-api-using-the-authorization-code-flow-with-pkce)\n\nIf you're using embedded login, read the following articles:\n\n- [Call Your API Using Resource Owner Password Flow](https://auth0.com/docs/get-started/authentication-and-authorization-flow/resource-owner-password-flow/call-your-api-using-resource-owner-password-flow)\n- [Login Flow with Native Passkeys API](https://auth0.com/docs/native-passkeys-api#login-flow)\n\n## Examples\n\n### Universal Login with authorization code flow\n\n**Step 1: Request authorization code**\n\n```\ncurl --request GET \\\n  --url 'https://{yourDomain}/authorize?response_type=code&client_id={yourClientId}&redirect_uri=%7ByourRedirectUri%7D&scope=create%3Ame%3Aauthentication_methods&offline_access=&audience=https%3A%2F%2F{yourDomain}%2Fme%2F'\n```\n\n**Step 2: Exchange code for access token**\n\n```\ncurl --request POST \\\n  --url 'https://{yourDomain}/oauth/token' \\\n  --header 'content-type: application/json' \\\n  --data '{\"grant_type\": \"authorization_code\",\"client_id\": \"{yourClientId}\",\"client_secret\": \"{yourClientId}\",\"code\": \"{yourAuthorizationCode}\",\"redirect_uri\": \"{yourRedirectUri}\",\"audience\": \"{yourAudience}\",\"scope\": \"create:me:authentication_methods\",\"offline_access\": \"\"}'\n```\n\n### Embedded login with native passkeys\n\n**Step 1: Request login challenge**\n\n```\ncurl --request POST \\\n  --url 'https://{yourDomain}/passkey/challenge' \\\n  --header 'content-type: application/json' \\\n  --data '{\"client_id\": \"{yourDomain}\"}'\n```\n\n**Step 2: Authenticate existing user**\n\n```\ncurl --request POST \\\n  --url 'https://{yourDomain}/oauth/token' \\\n  --header 'content-type: application/json' \\\n  --data '{  \"grant_type\": \"urn:okta:params:oauth:grant-type:webauthn\",  \"client_id\": \"{yourClientId}\",  \"scope\": \"create:me:authentication_methods offline_access\",  \"audience\": \"https://{yourDomain}/me/\"  \"auth_session\": \"{sessionIdFromTheFirstRequest}\",  \"authn_response\": \"{authenticatorResponse}\"}'\n```\n\n## Rate limits\nDuring Early Access, the My Account API is limited at a tenant level to 25 requests per second."
+    "description": "The Auth0 My Account API provides a dedicated set of endpoints for users to manage their own account information. Customers can use these APIs to build self-service experiences in their applications or progressively add details to a user account.\n\nThe My Account API operates within the context of the currently logged-in user and can be used directly within user-facing applications.\n\n:::tip Using Auth0 domain vs. custom domain\n\nThe My Account API supports using your canonical Auth0 domain or your custom domain, but you must use the same one throughout the entire process, including:\n\n- Getting an access token\n- Setting the audience value\n- Calling the My Account API endpoint\n\nFor more information, read [Custom Domains](https://auth0.com/docs/customize/custom-domains).\n\n:::\n\n## Activate the My Account API\n\nYou can activate the My Account API for your tenant in the Auth0 Dashboard:\n\n1. Navigate to Authentication > APIs.\n2. Locate the MyAccount API banner.\n3. Select Activate.\n\n![](https://images.ctfassets.net/cdy7uua7fh8z/DGkDQNIHcegN8vtQyEvF3/a2e98b06867701a66fa1f1b3df1c996b/My_Account_API_-_Activate.png)\n\nBy default, the My Account API is created with the following application API access policies:\n\n`require_client_grant` for user flows\n\n`deny_all` for client (machine-to-machine) flows\n\nFor an application to access the My Account API on the user's behalf, you must explicitly create a client grant for that application, which allows you to define the maximum scopes the application can request. Alternatively, you can change the policy for user access flows to allow_all, which allows any application in your tenant to request any scope from the My Account API.\n\nBecause the My Account API exposes sensitive information and operations, Auth0 does not recommend using allow_all for user access flows. You should follow a least privilege principle with the My Account API to ensure applications only get access to what they truly need, minimizing potential security risks.\n\nThe final permissions granted to the application will be determined by the intersection of the scopes allowed by the application API access policy, the Role-Based Access Control (RBAC) permissions assigned to the end user, and any user consent given (if applicable).\n\n:::info Supported flows\n\nYou cannot update the application API policy for client access to the My Account API, which means you cannot access the My Account API using the Client Credentials Flow.\n\n:::\n\nTo learn more about how to manage application API access policies and their associated client grants, read [Application Access to APIs: Client Grants](https://auth0.com/docs/get-started/applications/application-access-to-apis-client-grants).\n\n## Get an access token\n\nYou can get an access token for the My Account API in the same way you'd get an access token for one of your own APIs.\n\n:::info &nbsp\nIf you're going to allow the My Account API to perform sensitive operations (such as enrolling an authentication method), we strongly recommend that you use [step-up authentication](https://auth0.com/docs/secure/multi-factor-authentication/step-up-authentication) to enforce additional security policies through [multi-factor authentication (MFA)](https://auth0.com/docs/secure/multi-factor-authentication).\n:::\n\nIf you're using Universal Login, read the following articles:\n\n- [Call Your API Using the Authorization Code Flow](https://auth0.com/docs/get-started/authentication-and-authorization-flow/authorization-code-flow/call-your-api-using-the-authorization-code-flow)\n- [Call Your API Using the Authorization Code Flow with PKCE](https://auth0.com/docs/get-started/authentication-and-authorization-flow/authorization-code-flow-with-pkce/call-your-api-using-the-authorization-code-flow-with-pkce)\n\nIf you're using embedded login, read the following articles:\n\n- [Call Your API Using Resource Owner Password Flow](https://auth0.com/docs/get-started/authentication-and-authorization-flow/resource-owner-password-flow/call-your-api-using-resource-owner-password-flow)\n- [Login Flow with Native Passkeys API](https://auth0.com/docs/native-passkeys-api#login-flow)\n\n## Examples\n\n### Universal Login with authorization code flow\n\n**Step 1: Request authorization code**\n\n```\ncurl --request GET \\\n  --url 'https://{yourDomain}/authorize?response_type=code&client_id={yourClientId}&redirect_uri=%7ByourRedirectUri%7D&scope=create%3Ame%3Aauthentication_methods&offline_access=&audience=https%3A%2F%2F{yourDomain}%2Fme%2F'\n```\n\n**Step 2: Exchange code for access token**\n\n```\ncurl --request POST \\\n  --url 'https://{yourDomain}/oauth/token' \\\n  --header 'content-type: application/json' \\\n  --data '{\"grant_type\": \"authorization_code\",\"client_id\": \"{yourClientId}\",\"client_secret\": \"{yourClientSecret}\",\"code\": \"{yourAuthorizationCode}\",\"redirect_uri\": \"{yourRedirectUri}\",\"audience\": \"{yourAudience}\",\"scope\": \"create:me:authentication_methods\",\"offline_access\": \"\"}'\n```\n\n### Embedded login with native passkeys\n\n**Step 1: Request login challenge**\n\n```\ncurl --request POST \\\n  --url 'https://{yourDomain}/passkey/challenge' \\\n  --header 'content-type: application/json' \\\n  --data '{\"client_id\": \"{yourClientId}\"}'\n```\n\n**Step 2: Authenticate existing user**\n\n```\ncurl --request POST \\\n  --url 'https://{yourDomain}/oauth/token' \\\n  --header 'content-type: application/json' \\\n  --data '{  \"grant_type\": \"urn:okta:params:oauth:grant-type:webauthn\",  \"client_id\": \"{yourClientId}\",  \"scope\": \"create:me:authentication_methods offline_access\",  \"audience\": \"https://{yourDomain}/me/\",  \"auth_session\": \"{sessionIdFromTheFirstRequest}\",  \"authn_response\": \"{authenticatorResponse}\"}'\n```"
   },
   "servers": [
     {
@@ -37,6 +37,11 @@
       "name": "consents",
       "description": "Consents",
       "x-displayName": "Consents"
+    },
+    {
+      "name": "organizations",
+      "description": "Organizations",
+      "x-displayName": "Organizations"
     }
   ],
   "paths": {
@@ -697,6 +702,9 @@
           "403": {
             "$ref": "#/components/responses/Forbidden"
           },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
           "429": {
             "$ref": "#/components/responses/TooManyRequests"
           }
@@ -1100,6 +1108,9 @@
           "403": {
             "$ref": "#/components/responses/Forbidden"
           },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
           "415": {
             "$ref": "#/components/responses/UnsupportedMediaType"
           },
@@ -1427,6 +1438,71 @@
         "x-release-lifecycle": "planned",
         "x-operation-group": "Consents",
         "x-operation-name": "get",
+        "x-codeSamples": []
+      }
+    },
+    "/organizations": {
+      "get": {
+        "description": "Retrieve the list of organizations the authenticated user belongs to.",
+        "operationId": "getOrganizations",
+        "x-operation-request-parameters-name": "ListOrganizationsRequestParameters",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/FromQueryParameter"
+          },
+          {
+            "$ref": "#/components/parameters/OrganizationsTakeQueryParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListOrganizationsResponseContent"
+                }
+              }
+            },
+            "description": "Successfully retrieved organizations",
+            "headers": {
+              "x-ratelimit-limit": {
+                "$ref": "#/components/headers/XRateLimitLimitHeader"
+              },
+              "x-ratelimit-reset": {
+                "$ref": "#/components/headers/XRateLimitResetHeader"
+              },
+              "x-ratelimit-remaining": {
+                "$ref": "#/components/headers/XRateLimitRemainingHeader"
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        },
+        "security": [
+          {
+            "Bearer-DPoP": [
+              "read:me:organizations"
+            ]
+          }
+        ],
+        "tags": [
+          "organizations"
+        ],
+        "summary": "List user organizations",
+        "x-release-lifecycle": "planned",
+        "x-operation-group": "Organizations",
+        "x-operation-name": "list",
         "x-codeSamples": []
       }
     }
@@ -2098,6 +2174,11 @@
                 "const": "passkey",
                 "default": "passkey",
                 "type": "string"
+              },
+              "use_exclude_credentials": {
+                "type": "boolean",
+                "x-internal": true,
+                "description": "When enabled, Auth0 includes the user's existing credentials in the excludeCredentials field during passkey enrollment. This prevents users from accidentally registering multiple passkeys from the same authenticator, reducing credential clutter and avoiding confusion at sign-in."
               }
             },
             "required": [
@@ -2105,38 +2186,6 @@
             ]
           }
         ]
-      },
-      "CreateWebAuthnPlatformAuthenticationMethod": {
-        "title": "WebAuthn Platform enrollment payload",
-        "type": "object",
-        "properties": {
-          "type": {
-            "description": "Authentication method type (factor)",
-            "const": "webauthn-platform",
-            "default": "webauthn-platform",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type"
-        ],
-        "additionalProperties": false
-      },
-      "CreateWebAuthnRoamingAuthenticationMethod": {
-        "title": "WebAuthn Roaming enrollment payload",
-        "type": "object",
-        "properties": {
-          "type": {
-            "description": "Authentication method type (factor)",
-            "const": "webauthn-roaming",
-            "default": "webauthn-roaming",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type"
-        ],
-        "additionalProperties": false
       },
       "CreateTotpAuthenticationMethod": {
         "title": "TOTP enrollment payload",
@@ -2265,14 +2314,6 @@
             "title": "passkey"
           },
           {
-            "$ref": "#/components/schemas/CreateWebAuthnPlatformAuthenticationMethod",
-            "title": "webauthn-platform"
-          },
-          {
-            "$ref": "#/components/schemas/CreateWebAuthnRoamingAuthenticationMethod",
-            "title": "webauthn-roaming"
-          },
-          {
             "$ref": "#/components/schemas/CreateTotpAuthenticationMethod",
             "title": "totp"
           },
@@ -2302,8 +2343,6 @@
           "propertyName": "type",
           "mapping": {
             "passkey": "#/components/schemas/CreatePasskeyAuthenticationMethod",
-            "webauthn-platform": "#/components/schemas/CreateWebAuthnPlatformAuthenticationMethod",
-            "webauthn-roaming": "#/components/schemas/CreateWebAuthnRoamingAuthenticationMethod",
             "totp": "#/components/schemas/CreateTotpAuthenticationMethod",
             "push-notification": "#/components/schemas/CreatePushNotificationAuthenticationMethod",
             "recovery-code": "#/components/schemas/CreateRecoveryCodeAuthenticationMethod",
@@ -2400,6 +2439,31 @@
         ],
         "additionalProperties": false
       },
+      "PublicKeyCredentialDescriptor": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The credential ID."
+          },
+          "type": {
+            "type": "string",
+            "const": "public-key"
+          },
+          "transports": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Hints about the transports the authenticator may use."
+          }
+        },
+        "required": [
+          "id",
+          "type"
+        ],
+        "additionalProperties": false
+      },
       "PublicKeyCredentialCreationOptions": {
         "properties": {
           "authenticatorSelection": {
@@ -2437,6 +2501,14 @@
           },
           "user": {
             "$ref": "#/components/schemas/User"
+          },
+          "excludeCredentials": {
+            "type": "array",
+            "x-internal": true,
+            "items": {
+              "$ref": "#/components/schemas/PublicKeyCredentialDescriptor"
+            },
+            "description": "Existing credentials to exclude from re-registration."
           }
         },
         "required": [
@@ -3699,6 +3771,48 @@
             "$ref": "#/components/schemas/Consent"
           }
         ]
+      },
+      "Organization": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the organization."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name (slug) of the organization."
+          },
+          "display_name": {
+            "type": "string",
+            "description": "The human-readable display name of the organization."
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "ListOrganizationsResponseContent": {
+        "type": "object",
+        "properties": {
+          "organizations": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "$ref": "#/components/schemas/Organization"
+            }
+          },
+          "next": {
+            "type": "string",
+            "description": "The token to retrieve the next page of organizations (if there is one)"
+          }
+        },
+        "required": [
+          "organizations"
+        ],
+        "additionalProperties": false
       }
     },
     "responses": {
@@ -3778,6 +3892,16 @@
           }
         },
         "description": "Not Found."
+      },
+      "Conflict": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        },
+        "description": "Request conflicts with the current state of the resource."
       },
       "CreateConnectedAccountsResponse": {
         "content": {
@@ -3889,6 +4013,17 @@
           "type": "string"
         },
         "description": "The ID of the consent to retrieve"
+      },
+      "OrganizationsTakeQueryParameter": {
+        "name": "take",
+        "in": "query",
+        "description": "Number of results to return (1-100)",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 50
+        }
       }
     }
   }

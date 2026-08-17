@@ -1,7 +1,12 @@
 ---
 title: "Get Token"
-description: "Custom Token Exchange (CTE) provides a mechanism for applications to exchange pre-existing identity tokens for Auth0 tokens by invoking the `/oauth/token`..."
+description: "Exchange a pre-existing identity token for an Auth0 token using the Custom Token Exchange grant."
 ---
+
+import { ResponseSchema } from '/snippets/ResponseSchema.jsx';
+
+
+## Endpoint
 
 `POST /oauth/token`
 
@@ -12,16 +17,22 @@ Custom Token Exchange is currently available in Early Access. By using this feat
 </Note>
 
 ### Remarks
- - The scopes issued to the application may differ from the scopes requested. In this case, a scope parameter will be included in the response JSON. Scopes are filtered out as explained in [API Access Policies for Applications](https://auth0.com/docs/ja-jp/get-started/apis/api-access-policies-for-applications)
 
- - The `subject_token_type` must correspond to an existing Custom Token Exchange Profile and an associated [Action](https://auth0.com/docs/customize/actions).
+Read [Custom Token Exchange](/docs/authenticate/custom-token-exchange) to understand Custom Token Exchange Profiles, how a profile maps to an Action, and how to enable this flow for your application.
 
- - For non-confidential applications that cannot keep the Client Secret safe (for example, native apps), the endpoint supports passing no Client Secret but the application itself must have the property `tokenEndpointAuthMethod` set to `none`. You can do this either from the UI (**Dashboard > Applications > Application Settings**) or using the Management API.
+ - The scopes issued to the application may differ from the scopes requested. In this case, a scope parameter will be included in the response JSON. Scopes are filtered out as explained in [API Access Policies for Applications](/docs/get-started/apis/api-access-policies-for-applications).
 
- - You have to [Enable Custom Token Exchange for your application](https://auth0.com//docs/authenticate/custom-token-exchange/configure-custom-token-exchange#enable-custom-token-exchange-for-your-application). To learn more, read the [Custom Token Exchange documentation](https://auth0.com/docs/authenticate/custom-token-exchange).
+ - MFA is not compatible with transactions where an actor is set via `setActor()`. In those cases, the request returns a `400` error: `MFA is not supported using actor_token with the requested token exchange profile.`
 
-## Parameters
+ - When the Action calls `setActor()`, issued access tokens and ID tokens include an `act` claim representing the [delegation chain](/docs/secure/call-apis-on-users-behalf/on-behalf-of-token-exchange#the-act-claim). The `act` claim is also included in the `userinfo` response.
 
+ - To request a Session Transfer Token instead of an access token, set `audience` to `urn:YOUR_AUTH0_TENANT_DOMAIN:session_transfer`. Calling `setActor()` is required for this request. Read [Session Delegation](/docs/authenticate/single-sign-on/session-delegation) to learn how to redeem the resulting token to establish a session on behalf of the subject user.
+
+ - To include standard claims (such as `email`) in the issued token(s), the corresponding scope (`email`) must be included in the request, even if your Action sets the claim explicitly. To learn more, read [OpenID Connect Scopes: Standard claims](/docs/get-started/apis/scopes/openid-connect-scopes#standard-claims).
+
+ - Custom Token Exchange does not add an agent actor. Even when Agents as Principal is enabled, the `act` claim is fully controlled by the Action through `setActor()`; Auth0 does not add an agent `act` automatically for this grant.
+
+## Headers
 <ParamField header="DPoP" type="string">
   A DPoP proof for the request. This is optional and only required if your application uses Demonstrating Proof-of-Possession.
 </ParamField>
@@ -30,8 +41,10 @@ Custom Token Exchange is currently available in Early Access. By using this feat
   End-user IP as a string value. Set this if you want Suspicious IP Throttling protection to work in server-side scenarios.
 </ParamField>
 
-## Request Body
-
+## Body Parameters
+<div className="prose-sm prose-gray dark:prose-invert">
+  <span data-as="p">The request body is in `application/x-www-form-urlencoded` format.</span>
+</div>
 <ParamField body="grant_type" type="string" required>
   Denotes the flow you are using. For Custom Token Exchange, use `urn:ietf:params:oauth:grant-type:token-exchange`.
 
@@ -55,7 +68,7 @@ Custom Token Exchange is currently available in Early Access. By using this feat
 </ParamField>
 
 <ParamField body="audience" type="string">
-  (Optional) The unique identifier of the target API you want to access. The default tenant audience will be used when not present, as configured in [Tenant Settings](https://auth0.com/docs/get-started/tenant-settings).
+  (Optional) The unique identifier of the target API you want to access. The default tenant audience will be used when not present, as configured in [Tenant Settings](https://auth0.com/docs/get-started/tenant-settings). To request a [Session Transfer Token](/docs/authenticate/single-sign-on/session-delegation) for delegated session establishment instead of an access token, use `urn:YOUR_AUTH0_TENANT_DOMAIN:session_transfer`.
 </ParamField>
 
 <ParamField body="resource" type="string">
@@ -70,8 +83,44 @@ Custom Token Exchange is currently available in Early Access. By using this feat
   (Optional) The organization or identifier with which you want the request to be associated. Alternatively, you can specify an organization name if [Use Organization Names in Authentication API](https://auth0.com/docs/manage-users/organizations/configure-organizations/use-org-name-authentication-api) is specified.
 </ParamField>
 
-## Response
+<ParamField body="actor_token" type="string">
+  (Optional) A token identifying the actor performing delegation on behalf of the subject user. Must be provided together with `actor_token_type`. When present, refresh tokens will not be issued.
+</ParamField>
 
+<ParamField body="actor_token_type" type="string">
+  (Optional) The type of the actor token. Must be provided together with `actor_token`. For Auth0 ID tokens, use `urn:ietf:params:oauth:token-type:id_token` for automatic server-side validation (signature, expiry, issuer, user lookup). For other values, follow the same namespace restrictions as `subject_token_type`.
+</ParamField>
+
+## Response Schema
+
+<ResponseSchema>
+<ResponseField name="access_token" type="string">
+  The access token.
+</ResponseField>
+
+<ResponseField name="refresh_token" type="string">
+  The refresh token.
+</ResponseField>
+
+<ResponseField name="id_token" type="string">
+  The ID token.
+</ResponseField>
+
+<ResponseField name="token_type" type="string">
+  The type of token.
+</ResponseField>
+
+<ResponseField name="issued_token_type" type="string">
+  The issued token type. For a standard exchange, this is `urn:ietf:params:oauth:token-type:access_token`. When requesting a Session Transfer Token, this is `urn:auth0:params:oauth:token-type:session_transfer_token` and the token itself is returned in `access_token`.
+</ResponseField>
+
+<ResponseField name="expires_in" type="integer">
+  The access token lifetime in seconds.
+</ResponseField>
+</ResponseSchema>
+
+## Response Messages
 | Status | Description |
 |--------|-------------|
 | 200 | Successful response |
+| 400 | Bad request. May occur if required parameters are missing or inconsistent (for example, only one of `actor_token`/`actor_token_type` is present), or if `setActor()` was not called when requesting a Session Transfer Token. |

@@ -24,7 +24,13 @@ The **Absolute Expiration** of a session is defined upon session creation. You c
 
 Make a `PATCH` call to the [Tenant Settings endpoint](https://auth0.com/docs/api/management/v2#!/tenants/patch_settings). Be sure to replace `MGMT_API_ACCESS_TOKEN`, `SESSION_LIFETIME`, and `IDLE_SESSION_LIFETIME` placeholder values with your Management API <Tooltip tip="Access Token: Authorization credential, in the form of an opaque string or JWT, used to access an API." cta="View Glossary" href="/docs/glossary?term=Access+Token">Access Token</Tooltip>, session lifetime value, and idle session lifetime value, respectively.
 
+<Callout icon="file-lines" color="#0EA5E9" iconType="regular">Using the Auth0 CLI? If you haven't already, [set up and authenticate your CLI session](/docs/deploy-monitor/auth0-cli) before running this command.</Callout>
+
 <AuthCodeGroup>
+```bash Auth0 CLI
+auth0 api patch "tenants/settings" \
+  --data '{ "session_lifetime": SESSION_LIFETIME_VALUE, "idle_session_lifetime": IDLE_SESSION_LIFETIME_VALUE }'
+```
 ```bash cURL
 curl --request PATCH \
   --url 'https://{yourDomain}/api/v2/tenants/settings' \
@@ -161,7 +167,7 @@ url = URI("https://{yourDomain}/api/v2/tenants/settings")
 
 http = Net::HTTP.new(url.host, url.port)
 http.use_ssl = true
-http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+http.verify_mode = OpenSSL::SSL::VERIFY_PEER
 
 request = Net::HTTP::Patch.new(url)
 request["content-type"] = 'application/json'
@@ -179,8 +185,6 @@ puts response.read_body
 | `MGMT_API_ACCESS_TOKEN` | [Access Token for the Management API](https://auth0.com/docs/api/management/v2/tokens) with the scope `update:tenant_settings`. |
 | `IDLE_SESSION_LIFETIME_VALUE` | Timeframe (in hours) after which a user's session will expire if they haven’t interacted with the Authorization Server. Will be superseded by system limits if over 72 hours (3 days) for Essential or Professional or 2,400 hours (100 days) for enterprise plans. |
 | `SESSION_LIFETIME_VALUE` | Timeframe (in hours) after which a user will be required to log in again, regardless of their activity. Will be superseded by system limits if over 720 hours (30 days) for Essential or Professional or 8,760 hours (365 days) for enterprise plans. |
-
-For troubleshooting help, review [Check API Calls](/docs/troubleshoot/authentication-issues/check-api-calls).
 
 ## Learn more
 
