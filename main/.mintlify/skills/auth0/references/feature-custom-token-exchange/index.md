@@ -149,14 +149,17 @@ auth0 token-exchange show <profile-id> --json
 #    so use a direct HTTP client. Keep the client secret and subject token out of argv and
 #    shell history by feeding them through a curl config on stdin, and discard the response
 #    body — the HTTP status is all you need to confirm the exchange works.
+# the developer exports AUTH0_CLIENT_SECRET and SUBJECT_TOKEN in their own shell; never paste them into chat.
+# q escapes backslashes and quotes for curl's config syntax; printf and sed keep the values off argv.
+q() { printf '%s' "$1" | sed 's/[\\"]/\\&/g'; }
 curl -s -o /dev/null -w '%{http_code}\n' -X POST "https://<tenant-domain>/oauth/token" \
   -H "content-type: application/x-www-form-urlencoded" \
   --data-urlencode "grant_type=urn:ietf:params:oauth:grant-type:token-exchange" \
   --data-urlencode "subject_token_type=<uri>" \
   --data-urlencode "audience=<api-id>" \
-  --config - <<'EOF'
-user = "<client-id>:<client-secret>"
-data-urlencode = "subject_token=<token>"
+  --config - <<EOF
+user = "<client-id>:$(q "$AUTH0_CLIENT_SECRET")"
+data-urlencode = "subject_token=$(q "$SUBJECT_TOKEN")"
 EOF
 # Public client (no secret): drop the `user` line and instead add
 #   data-urlencode = "client_id=<client-id>"
@@ -166,9 +169,10 @@ The tenant setup (steps 1–3) is the deliverable; step 4 only confirms it works
 always runnable in a given environment.
 
 Notes:
-- `auth0 apps update` has **no** `--is-first-party` or `--oidc-conformant` flag. Apps created in your
-  own tenant are already first-party; if you must set either on an existing client, patch it:
-  `auth0 api patch "clients/<id>" --data '{"is_first_party":true,"oidc_conformant":true}'`.
+- `auth0 apps update` has an `--is-first-party` flag, but **no** `--oidc-conformant` flag. Apps created in
+  your own tenant are already first-party; set it explicitly with `auth0 apps update <id> --is-first-party=true`.
+  `oidc_conformant` has no dedicated flag — set it via the JSON passthrough:
+  `auth0 apps update <id> --data '{"oidc_conformant":true}'`.
 - `--type` only accepts `custom_authentication` (CTE). `on_behalf_of_token_exchange` is a different
   (OBO) profile type and is out of scope here.
 - `subject_token_type`: 8–100 chars, a valid URI, no reserved prefix, unique per tenant (409 on duplicate).
@@ -177,7 +181,7 @@ Notes:
   Management API. If a *separate* requirement needs them: "Allow Skip User Consent" is a per-API
   setting on a *custom* API (`auth0 api patch "resource-servers/<custom-api-id>"`) — the Management
   API instead relies on the client's first-party status — and authorizing an M2M app for the
-  Management API uses `auth0 api post "client-grants"`.
+  Management API uses `auth0 client-grants create`.
 
 Verify subcommands and flag names with `auth0 token-exchange --help` and `auth0 actions --help`
 rather than inferring them; use `auth0 api` for Management API calls without a dedicated
